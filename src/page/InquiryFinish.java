@@ -1,4 +1,4 @@
-package Page;
+package page;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -12,9 +12,9 @@ import java.sql.Statement;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class Finish extends JFrame {
+public class InquiryFinish extends JFrame {
 
-	public Finish(String code) {
+	public InquiryFinish(String code) {
 		this.setTitle("Train Inquiry system");
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setSize(300, 150);

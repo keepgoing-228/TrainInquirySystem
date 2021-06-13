@@ -1,4 +1,4 @@
-package Page;
+package page;
 
 public interface TrainInquirySystem {
 	public static final int WIDTH = 800;

@@ -1,4 +1,4 @@
-package Page;
+package page;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -27,8 +27,8 @@ public class TrainNoSelection extends JFrame implements ActionListener, TrainInq
 	
 	private ArrayList<String> trainNoList;
 	private int startStationID, endStationID, ticketCount;
-	String ticketType;
-	Calendar departureDate;
+	private String ticketType;
+	private Calendar departureDate;
 	private SearchResultTable searchResultTable;
 	
 	
@@ -116,7 +116,7 @@ public class TrainNoSelection extends JFrame implements ActionListener, TrainInq
 			
 			try {
 				Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/highspeedrail",
-				           "root", "Timecompressor1919810");
+				           "root", test.PASSWORD);
 				Statement query = conn.createStatement();
 				ResultSet result;
 				
@@ -166,7 +166,7 @@ public class TrainNoSelection extends JFrame implements ActionListener, TrainInq
 				result.close();
 
 				int travelTime = arriveTime - departureTime;
-				JLabel travelTimeLabel = new JLabel(String.format("%d:%d", travelTime / 60, travelTime % 60));
+				JLabel travelTimeLabel = new JLabel(String.format("%d:%02d", travelTime / 60, travelTime % 60));
 				gridBag.gridx = 5;
 				this.add(travelTimeLabel, gridBag);
 			} catch (SQLException e) {
@@ -178,14 +178,14 @@ public class TrainNoSelection extends JFrame implements ActionListener, TrainInq
 		private Object[][] checkDiscount(String trainNo) {
 			try {
 				Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/highspeedrail",
-				           "root", "Timecompressor1919810");
+				           "root", test.PASSWORD);
 				Statement stmt1 = conn.createStatement();
 				Statement stmt2 = conn.createStatement();
 				ResultSet totalEarlyDiscountTickets = stmt1.executeQuery(String.format("select discount, tickets "
 						+ "from earlyDiscount "
 						+ "where trainNo = %s and serviceday = '%s' "
 						+ "order by discount asc;", 
-						trainNo, test.getDay(departureDate)));
+						trainNo, SimpleQuery.getDay(departureDate)));
 				ResultSet earlyDiscountTickets = stmt2.executeQuery(String.format("select discount, count(*) "
 						+ "from ticket "
 						+ "where trainNo = %s and departureDay = '%d/%d/%d' and discountType = 'earlyDiscount' "
@@ -252,12 +252,8 @@ public class TrainNoSelection extends JFrame implements ActionListener, TrainInq
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(TrainInquirySystem.WIDTH, TrainInquirySystem.HEIGHT);
 		this.setLayout(new BorderLayout());
-		this.trainNoList = trainNoList;
-		this.startStationID = startStationID;
-		this.endStationID = endStationID;
-		this.ticketType = ticketType;
-		this.departureDate = departureDate;
-		this.ticketCount = ticketCount;
+		this.initialize(trainNoList, startStationID, endStationID, ticketType, departureDate, ticketCount);
+
 		
 		this.add(new Header(), BorderLayout.NORTH);
 		JPanel positionPanel = new JPanel();
@@ -273,7 +269,7 @@ public class TrainNoSelection extends JFrame implements ActionListener, TrainInq
 		String endStation = "";
 		try {
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/highspeedrail",
-			           "root", "Timecompressor1919810");
+			           "root", test.PASSWORD);
 			Statement stmt = conn.createStatement();
 			String searchStation = String.format("select enName from station where ID = %d;", startStationID);
 			ResultSet station = stmt.executeQuery(searchStation);
@@ -286,7 +282,7 @@ public class TrainNoSelection extends JFrame implements ActionListener, TrainInq
 		} catch(SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		String topLabel = String.format("From %s to %s %d/%d (%s)", startStation, endStation, departureDate.get(Calendar.MONTH) + 1, departureDate.get(Calendar.DATE), test.getDay(departureDate));
+		String topLabel = String.format("From %s to %s %d/%d (%s)", startStation, endStation, departureDate.get(Calendar.MONTH) + 1, departureDate.get(Calendar.DATE), SimpleQuery.getDay(departureDate));
 		positionPanel.add(new JLabel(topLabel), gridBag);
 		gridBag.gridy = 1;
 		gridBag.anchor = GridBagConstraints.CENTER;
@@ -303,6 +299,16 @@ public class TrainNoSelection extends JFrame implements ActionListener, TrainInq
 		gridBag.gridy = 2;
 		positionPanel.add(buttonPanel, gridBag);
 		this.add(positionPanel, BorderLayout.CENTER);
+	}
+
+	private void initialize(ArrayList<String> trainNoList, int startStationID, int endStationID, String ticketType,
+			Calendar departureDate, int ticketCount) {
+		this.trainNoList = trainNoList;
+		this.startStationID = startStationID;
+		this.endStationID = endStationID;
+		this.ticketType = ticketType;
+		this.departureDate = departureDate;
+		this.ticketCount = ticketCount;		
 	}
 
 	@Override
