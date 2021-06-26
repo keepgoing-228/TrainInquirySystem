@@ -11,7 +11,12 @@ public class test {
 	public static TimeTable timeTablePage;
 	public static SearchDiscountTrain searchDiscountTrainPage;
 	public static DiscountTrainInfo discountTrainInfoPage;
-	public static final String PASSWORD = "Timecompressor1919810";
+	public static TrainReviseTicketMenu ReviseMenuPage;
+	public static ModifyTicket ModifyPage;
+	public static NoInformation NoInformationdPage;
+	public static RefundTicket RefoundTicketPage;
+	public static SuccessfulRevise SuccessfulRevisePage;
+	public static final String PASSWORD = "2853a22281111Tim";
 	
 	public static void main(String[] args) {
 		inquiryPage = new TrainInquiry();
@@ -52,6 +57,9 @@ public class test {
 			discountTrainInfoPage.dispose();
 		}
 		
+		if (ReviseMenuPage != null) {
+			ReviseMenuPage.dispose();
+		}
 	}
 	
 }

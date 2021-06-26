@@ -52,6 +52,12 @@ public class Header extends JPanel implements ActionListener{
 		case "Search Discount Train":{
 			test.searchDiscountTrainPage = new SearchDiscountTrain();
 			test.searchDiscountTrainPage.setVisible(true);
+			break;
+		}
+		case "Change or Cancel Ticket":{
+			test.ReviseMenuPage = new TrainReviseTicketMenu();
+			test.ReviseMenuPage.setVisible(true);
+			break;
 		}
 		}
 		
